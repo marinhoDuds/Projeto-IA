@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class AgeClassCNN(nn.Module):
+class BaseCNN(nn.Module):
     """
     Representa um modelo de rede neural para classificação de imagens em 5 classes, sendo elas: Criança, Adolescente, Jovem, Adulto, Idoso.
     """
@@ -23,7 +23,6 @@ class AgeClassCNN(nn.Module):
         self.conv3 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
 
         self.fcl1 = nn.Linear(64 * 16 * 16, 128)
-        self.fcl2 = nn.Linear(128, num_class)
 
     def forward(self, x):
         """
@@ -38,7 +37,6 @@ class AgeClassCNN(nn.Module):
 
         x = x.view(x.size(0), -1)
 
-        x = F.relu(self.fcl1(x))
-        x = self.fcl2(x)
+        features = F.relu(self.fcl1(x))
 
-        return x
+        return features
