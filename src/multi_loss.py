@@ -9,6 +9,6 @@ class MultiLoss(nn.Module):
 
     def forward(self, outputs, labels):
         age_pred, age_class_pred = outputs
-        age_true =  labels.float().unsqueeze(1) 
-        class_true = labels
+        age_true =  labels[0]
+        class_true = labels[1]
         return self.alpha*self.mse(age_pred, age_true) + (1-self.alpha)*self.ce(age_class_pred, class_true)

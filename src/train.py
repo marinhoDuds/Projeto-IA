@@ -20,10 +20,13 @@ def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, pat
 
     if model_type == "r":
         criterion = nn.MSELoss(reduction='mean')
+        print("Running on Regression Model!")
     elif model_type == "c":
         criterion = nn.CrossEntropyLoss()
+        print("Running on Classification Model!")
     else:
         criterion = MultiLoss()
+        print("Running on Multi Model!")
     
     optimizer = optim.Adam(model.parameters(), lr=lr)
     best_val_loss = float("inf")
@@ -50,7 +53,7 @@ def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, pat
         val_losses.append(val_loss)
         
         print(
-            f"Epoch {epoch}/{num_epochs} | "
+            f"\nEpoch {epoch}/{num_epochs} | "
             f"Train Loss: {train_loss:.4f} | "
             f"Val Loss: {val_loss:.4f}"
         )
@@ -85,10 +88,12 @@ def train_epoch(model, loader, criterion, optimizer, device):
 
     for images, labels in tqdm(loader, leave=False, desc="Training"):
         images = images.to(device)
-        if model.type == "r":
-            labels = labels.to(device).float().unsqueeze(1) 
-        else:  
-            labels = labels.to(device)
+        if model.type == "c":
+            labels = labels[1].to(device)
+        elif model.type == "r":  
+            labels = labels[0].to(device).unsqueeze(1) 
+        else:
+            labels = (labels[0].to(device).unsqueeze(1), labels[1].to(device))
 
         optimizer.zero_grad()
 
@@ -113,10 +118,12 @@ def eval_epoch(model, loader, criterion, device, save_outputs=False):
     with torch.no_grad():
         for images, labels in tqdm(loader, leave=False, desc="Validation"):
             images = images.to(device)
-            if model.type == "r":
-                labels = labels.to(device).float().unsqueeze(1) 
-            else:  
-                labels = labels.to(device)
+            if model.type == "c":
+                labels = labels[1].to(device)
+            elif model.type == "r":  
+                labels = labels[0].to(device).unsqueeze(1) 
+            else:
+                labels = (labels[0].to(device).unsqueeze(1), labels[1].to(device))
 
             outputs = model(images)
 
@@ -130,6 +137,7 @@ def eval_epoch(model, loader, criterion, device, save_outputs=False):
                 preds = outputs.squeeze()
             else:
                preds = outputs[0].squeeze()
+               labels = labels[0]
 
             all_preds.extend(preds.cpu().numpy())
             all_labels.extend(labels.cpu().numpy())  
@@ -152,5 +160,6 @@ def eval_epoch(model, loader, criterion, device, save_outputs=False):
         })
         filename = f"predictions/predictions_train{next_index}.csv"
         df.to_csv(filename, index=False)
+        print(f"Test dataset preds on {filename}")
 
     return total_loss / len(loader)

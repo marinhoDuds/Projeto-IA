@@ -40,9 +40,11 @@ if args.command == "train":
     else:
         model = AgeMultiModel()
 
+    print("Starting training!")
     train(model, args.path, device, IMG_SIZE, BATCH_SIZE, EPOCHS, LR, PATIENCE)
 
 elif args.command == "inference":
+    print("Starting inference!")
     inference(args.path, args.model, device, IMG_SIZE)
 
 elif args.command == "data":
