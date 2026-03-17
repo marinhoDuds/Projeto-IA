@@ -1,11 +1,6 @@
 import sys
 import os
 import unittest
-
-# Configuração de diretório para execução direta
-raiz_projeto = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(raiz_projeto)
-
 from src.process_data import split_dataset, age_class_name
 
 class TestDatasetSplit(unittest.TestCase):
