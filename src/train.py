@@ -12,6 +12,7 @@ from src.process_data import get_datasets
 
 def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, patience):
     model_type = model.type
+    model_save = f"mode-{model_type}.pth"
     train_dataset, val_dataset, test_dataset = get_datasets(dataset_path, img_size)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -61,7 +62,7 @@ def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, pat
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             epochs_without_improvement = 0
-            torch.save({"model_state": model.state_dict(),"type": model.type, "train_losses":train_losses, "val_losses":val_losses}, "model.pth")
+            torch.save({"model_state": model.state_dict(),"type": model.type, "train_losses":train_losses, "val_losses":val_losses}, model_save)
         else:
             epochs_without_improvement += 1
 
@@ -74,12 +75,13 @@ def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, pat
                 print("Early stopping triggered")
                 break
 
-    
-    checkpoint = torch.load("model.pth")
+    print("End of Train!")
+    checkpoint = torch.load(model_save)
     model.load_state_dict(checkpoint["model_state"])
+    print("Running eval for Test Dataset...")
     test_loss = eval_epoch(model, test_loader, criterion, device, save_outputs=True)
     print(f"Test Loss: {test_loss:.4f}")
-
+    print(f"Model saved in {model_save}")
     return model
 
 def train_epoch(model, loader, criterion, optimizer, device):
