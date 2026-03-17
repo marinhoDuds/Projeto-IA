@@ -1,7 +1,7 @@
 import os
 import torch
 import shutil
-from dataset import AgeDataset
+from .dataset import AgeDataset
 
 from torchvision import transforms
 from sklearn.model_selection import train_test_split
