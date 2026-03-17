@@ -13,7 +13,7 @@ class BaseCNN(nn.Module):
         Detalhes da arquitetura:
         //TODO: Ao chegarmos em uma arquitetura final, devemos descreve-la aqui. (se for necessário)
         """
-        super(AgeClassCNN, self).__init__()
+        super(BaseCNN, self).__init__()
          
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)

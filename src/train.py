@@ -5,8 +5,8 @@ import torch.optim as optim
 from tqdm import tqdm
 from torch.utils.data import DataLoader
 
-from multi_loss import MultiLoss
-from process_data import get_datasets
+from src.multi_loss import MultiLoss
+from src.process_data import get_datasets
 
 def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, patience):
     model_type = model.type
