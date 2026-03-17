@@ -21,12 +21,10 @@ class AgeDataset(Dataset):
 
         image = Image.open(img_path).convert("RGB")
         image = self.transform(image)
-        age = self.ages[idx]
 
-        if self.classification:
-            label = self.classification(age)
-        else:
-            label = age
+        age = torch.tensor(self.ages[idx], dtype=torch.float)
+        age_class = torch.tensor(self.classification(age), dtype=torch.long)
+        label = (age, age_class)
 
-        return image, torch.tensor(label)
+        return image, label
     

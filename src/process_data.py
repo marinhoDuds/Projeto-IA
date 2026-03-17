@@ -1,12 +1,12 @@
 import os
 import torch
 import shutil
-from .dataset import AgeDataset
+from src.dataset import AgeDataset
 
 from torchvision import transforms
 from sklearn.model_selection import train_test_split
 
-def age_class_name(age):
+def age_class(age):
     if age <= 5: return 0
     elif age<=12: return 1
     elif age <= 17: return 2
@@ -25,7 +25,7 @@ def get_image_age(dataset_path):
     return image_paths, ages
 
 def split_dataset(image_paths, ages):
-    age_classes = [age_class_name(age) for age in ages]
+    age_classes = [age_class(age) for age in ages]
     train_paths, test_paths, train_ages, test_ages = train_test_split(
         image_paths,
         ages,
@@ -34,18 +34,18 @@ def split_dataset(image_paths, ages):
         random_state=42
     )
 
-    age_classes = [age_class_name(age) for age in train_ages]
+    age_classes = [age_class(age) for age in train_ages]
     train_paths, val_paths, train_ages, val_ages = train_test_split(
         train_paths,
         train_ages,
-        test_size=0.135,
+        test_size=0.166,
         stratify=age_classes,
         random_state=42
     )
-
+    
     return (train_paths, train_ages, val_paths, val_ages, test_paths, test_ages)
     
-def get_datasets(dataset_path, img_size, model_type):
+def get_datasets(dataset_path, img_size):
     transform = transforms.Compose([
         transforms.Resize((img_size, img_size)),
         transforms.Grayscale(num_output_channels=1),
@@ -53,24 +53,24 @@ def get_datasets(dataset_path, img_size, model_type):
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
     ])
-    
-    if model_type == "r":
-        classification = None   
-    else:
-        classification = age_class_name
 
     datasets = os.listdir(dataset_path)
     if (len(datasets)==3):
-        train_paths, train_ages = get_image_age(os.path.join(dataset_path, datasets[0]))
-        val_paths, val_ages = get_image_age(os.path.join(dataset_path, datasets[1]))
-        test_paths, test_ages = get_image_age(os.path.join(dataset_path, datasets[2]))
+        train_paths, train_ages = get_image_age(os.path.join(dataset_path, datasets[1]))
+        val_paths, val_ages = get_image_age(os.path.join(dataset_path, datasets[2]))
+        test_paths, test_ages = get_image_age(os.path.join(dataset_path, datasets[0]))
+        
+        train_root = f"{dataset_path}/{datasets[1]}"
+        val_root = f"{dataset_path}/{datasets[2]}"
+        test_root = f"{dataset_path}/{datasets[0]}"
     else:
         image_paths, ages = get_image_age(dataset_path)
         train_paths, train_ages, val_paths, val_ages, test_paths, test_ages = split_dataset(image_paths, ages) 
+        train_root = val_root = test_root = dataset_path
 
-    train_dataset = AgeDataset(dataset_path, train_paths, train_ages, transform, classification)
-    val_dataset = AgeDataset(dataset_path, val_paths, val_ages, transform, classification)
-    test_datasets = AgeDataset(dataset_path, test_paths, test_ages, transform, classification)
+    train_dataset = AgeDataset(train_root, train_paths, train_ages, transform, classification=age_class)
+    val_dataset = AgeDataset(val_root, val_paths, val_ages, transform, classification=age_class)
+    test_datasets = AgeDataset(test_root, test_paths, test_ages, transform, classification=age_class)
 
     return train_dataset, val_dataset, test_datasets
 
@@ -85,18 +85,23 @@ def generate_datafolders(dataset_path, output_path="data_split"):
     os.makedirs(val_dir, exist_ok=True)
     os.makedirs(test_dir, exist_ok=True)
 
+    print("Generating train")
     for img in train_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(train_dir, img)
         shutil.copy2(src, dst)
 
+    print("Generating val")
     for img in val_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(val_dir, img)
         shutil.copy2(src, dst)
 
+    print("Generating test")
     for img in test_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(test_dir, img)
         shutil.copy2(src, dst)
+    
+    print("Split data done!")
 

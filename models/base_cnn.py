@@ -6,7 +6,7 @@ class BaseCNN(nn.Module):
     """
     Representa um modelo de rede neural para classificação de imagens em 5 classes, sendo elas: Criança, Adolescente, Jovem, Adulto, Idoso.
     """
-    def __init__(self, num_class=5):
+    def __init__(self):
         """
         Inicializa a arquitetura do modelo. 
 

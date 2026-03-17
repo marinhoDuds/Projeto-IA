@@ -7,7 +7,6 @@ from models.cnn_classification import AgeClassificationModel
 from models.cnn_regression import AgeRegressionModel
 from models.cnn_multi import AgeMultiModel
 
-
 def load_model(model_path, device):
     checkpoint = torch.load(model_path)
 
