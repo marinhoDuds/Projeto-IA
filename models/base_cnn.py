@@ -6,14 +6,14 @@ class BaseCNN(nn.Module):
     """
     Representa um modelo de rede neural para classificação de imagens em 5 classes, sendo elas: Criança, Adolescente, Jovem, Adulto, Idoso.
     """
-    def __init__(self, num_class=5):
+    def __init__(self):
         """
         Inicializa a arquitetura do modelo. 
 
         Detalhes da arquitetura:
         //TODO: Ao chegarmos em uma arquitetura final, devemos descreve-la aqui. (se for necessário)
         """
-        super(AgeClassCNN, self).__init__()
+        super(BaseCNN, self).__init__()
          
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=3, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)

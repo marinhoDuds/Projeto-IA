@@ -1,7 +1,7 @@
 import os
 import torch
 import shutil
-from dataset import AgeDataset
+from src.dataset import AgeDataset
 
 from torchvision import transforms
 from sklearn.model_selection import train_test_split
@@ -85,18 +85,23 @@ def generate_datafolders(dataset_path, output_path="data_split"):
     os.makedirs(val_dir, exist_ok=True)
     os.makedirs(test_dir, exist_ok=True)
 
+    print("Generating train")
     for img in train_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(train_dir, img)
         shutil.copy2(src, dst)
 
+    print("Generating val")
     for img in val_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(val_dir, img)
         shutil.copy2(src, dst)
 
+    print("Generating test")
     for img in test_paths:
         src = os.path.join(dataset_path, img)
         dst = os.path.join(test_dir, img)
         shutil.copy2(src, dst)
+    
+    print("Split data done!")
 

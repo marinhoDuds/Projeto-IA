@@ -209,3 +209,7 @@ __marimo__/
 # Datasets
 /dataset_idades
 /data
+/data_split
+
+/predictions
+model.pth
