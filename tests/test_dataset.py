@@ -28,11 +28,17 @@ class TestAgeDataset(unittest.TestCase):
         
         ds = AgeDataset(self.test_dir, [self.img_name], [25], self.transform, fake_class_func)
         img, label = ds[0]
-        self.assertEqual(label.item(), 3)
-        self.assertIsInstance(label, torch.Tensor)
+        
+        self.assertIsInstance(label, tuple)
+        self.assertEqual(label[1].item(), 3) 
         self.assertEqual(img.shape, (3, 128, 128))
 
     def test_getitem_regression(self):
-        ds = AgeDataset(self.test_dir, [self.img_name], [25], self.transform, None)
+        """Verifica se a idade é retornada corretamente mesmo em modo regressão"""
+        dummy_func = lambda x: 0 
+        
+        ds = AgeDataset(self.test_dir, [self.img_name], [25], self.transform, dummy_func)
         img, label = ds[0]
-        self.assertEqual(label.item(), 25)
+        
+        self.assertEqual(label[0].item(), 25)
+        self.assertIsInstance(label[0], torch.Tensor)
