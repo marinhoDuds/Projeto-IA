@@ -38,14 +38,14 @@ def split_dataset(image_paths, ages):
     train_paths, val_paths, train_ages, val_ages = train_test_split(
         train_paths,
         train_ages,
-        test_size=0.135,
+        test_size=0.166,
         stratify=age_classes,
         random_state=42
     )
-
+    
     return (train_paths, train_ages, val_paths, val_ages, test_paths, test_ages)
     
-def get_datasets(dataset_path, img_size, model_type):
+def get_datasets(dataset_path, img_size):
     transform = transforms.Compose([
         transforms.Resize((img_size, img_size)),
         transforms.Grayscale(num_output_channels=1),
@@ -66,7 +66,7 @@ def get_datasets(dataset_path, img_size, model_type):
     else:
         image_paths, ages = get_image_age(dataset_path)
         train_paths, train_ages, val_paths, val_ages, test_paths, test_ages = split_dataset(image_paths, ages) 
-        train_root, val_root, test_root = dataset_path
+        train_root = val_root = test_root = dataset_path
 
     train_dataset = AgeDataset(train_root, train_paths, train_ages, transform, classification=age_class)
     val_dataset = AgeDataset(val_root, val_paths, val_ages, transform, classification=age_class)

@@ -12,7 +12,7 @@ from src.process_data import get_datasets
 
 def train(model, dataset_path, device, img_size, batch_size, num_epochs, lr, patience):
     model_type = model.type
-    train_dataset, val_dataset, test_dataset = get_datasets(dataset_path, img_size, model_type)
+    train_dataset, val_dataset, test_dataset = get_datasets(dataset_path, img_size)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
