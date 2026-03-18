@@ -74,8 +74,4 @@ def inference(path, model_path, device, img_size):
     ])
     pred = predict(model, path, transform, device)
 
-    if isinstance(pred, dict):
-        print(f"Idade prevista: {pred['age']:.1f}")
-        print(f"Faixa Etária: {pred['class']}")
-    else:
-        print(pred)
+    return pred
