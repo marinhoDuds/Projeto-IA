@@ -11,8 +11,8 @@ from models.cnn_multi import AgeMultiModel
 
 IMG_SIZE = 128
 BATCH_SIZE = 32
-LR = 1e-3
-EPOCHS = 20
+LR = 1e-4
+EPOCHS = 50
 PATIENCE = 5
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

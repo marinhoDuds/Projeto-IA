@@ -210,6 +210,10 @@ __marimo__/
 /dataset_idades
 /data
 /data_split
+/trained-models
+/notebooks
 
 /predictions
 model.pth
+model-c.pth
+model-r.pth

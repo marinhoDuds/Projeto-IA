@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 class MultiLoss(nn.Module):
-    def __init__(self, alpha=0.7):
+    def __init__(self, alpha=0.5):
         super().__init__()
         self.alpha = alpha
         self.mse = nn.MSELoss()

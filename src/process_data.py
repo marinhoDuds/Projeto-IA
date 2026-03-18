@@ -48,7 +48,7 @@ def split_dataset(image_paths, ages):
 def get_datasets(dataset_path, img_size):
     transform = transforms.Compose([
         transforms.Resize((img_size, img_size)),
-        transforms.Grayscale(num_output_channels=1),
+        #transforms.Grayscale(num_output_channels=1),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5])
