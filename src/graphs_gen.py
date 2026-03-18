@@ -136,7 +136,7 @@ def plot_error_histogram(y_true: list, y_pred: list, title: str="Distribuição 
 
 def plot_error_boxplot(y_true_classification: list, y_true_regression: list, y_pred_regression: list, classes: list, title: str="Erro absoluto por faixa etária", filename: str='boxplot.png', main_color: str='blue', output_dir: str=None):
     """
-    Gera e salva um histograma boxplot mostrando a distribuição de erro absoluto para cada classe (faixa etária).
+    Gera e salva um boxplot mostrando a distribuição de erro absoluto para cada classe (faixa etária).
 
     Args:
         y_true_classification (lista/array): A categoria (faixa etária) de cada pessoa (ex: 'Adulto').
