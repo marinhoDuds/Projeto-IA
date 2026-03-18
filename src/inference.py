@@ -7,6 +7,15 @@ from models.cnn_classification import AgeClassificationModel
 from models.cnn_regression import AgeRegressionModel
 from models.cnn_multi import AgeMultiModel
 
+CLASS_LABELS = {
+    0: "criança pequena",
+    1: "criança",
+    2: "adolescente",
+    3: "jovem adulto",
+    4: "adulto",
+    5: "idoso"
+}
+
 def load_model(model_path, device):
     checkpoint = torch.load(model_path)
 
@@ -37,18 +46,19 @@ def predict(model, image_path, transform, device):
         output = model(image)
 
         if model_type == "c":
-            pred = torch.argmax(output, dim=1).item()
+            class_idx = torch.argmax(output, dim=1).item()
+            pred = CLASS_LABELS[class_idx]
 
         elif model_type == "r":
             pred = output.item()
 
         else:
             age_pred = output[0].item()
-            class_pred = torch.argmax(output[1], dim=1).item()
+            class_idx = torch.argmax(output[1], dim=1).item()
 
             pred = {
                 "age": age_pred,
-                "class": class_pred
+                "class": CLASS_LABELS[class_idx]
             }
 
     return pred
@@ -57,11 +67,15 @@ def predict(model, image_path, transform, device):
 def inference(path, model_path, device, img_size):
     model = load_model(model_path, device)
     transform = transforms.Compose([
-                                transforms.Resize((img_size, img_size)),
-                                transforms.Grayscale(num_output_channels=1),
-                                transforms.ToTensor(),
-                                transforms.Normalize(mean=[0.5], std=[0.5])
-                            ])
-
+        transforms.Resize((img_size, img_size)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                            std=[0.5, 0.5, 0.5])
+    ])
     pred = predict(model, path, transform, device)
-    print(pred)
+
+    if isinstance(pred, dict):
+        print(f"Idade prevista: {pred['age']:.1f}")
+        print(f"Faixa Etária: {pred['class']}")
+    else:
+        print(pred)
