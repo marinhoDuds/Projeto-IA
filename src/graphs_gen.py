@@ -38,9 +38,9 @@ def plot_confusion_matrix(y_true: list, y_pred: list, classes: list, title: str=
 
     plt.figure(figsize=(8, 6))
 
-    sns.heatmap(graph_confusion_matrix, annot=True, cmap=main_color,
+    sns.heatmap(graph_confusion_matrix, annot=True, cmap=main_color, fmt='d',
                 xticklabels=classes, yticklabels=classes,
-                cbar=False)
+                cbar=True)
 
     plt.title(title, fontsize=14, pad=15)
     plt.ylabel('Faixa etária real', fontsize=12)
@@ -158,7 +158,7 @@ def plot_error_boxplot(y_true_classification: list, y_true_regression: list, y_p
 
     sns.boxplot(x=y_true_classification, y=absotule_errors, order=classes, color=main_color, showfliers=False)
 
-    sns.stripplot(x=y_true_classification, y=absotule_errors, order=classes, color='black', alpha=0.4, jitter=True, size=4)
+    sns.stripplot(x=y_true_classification, y=absotule_errors, order=classes, color='black', alpha=0.1, jitter=True, size=4)
 
     plt.title(title, fontsize=14, pad=15)
     plt.xlabel('Faixa etária real', fontsize=12)
