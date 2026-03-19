@@ -5,6 +5,8 @@ from src.train import train
 from src.inference import inference
 from src.process_data import generate_datafolders
 
+from models.base_cnn import BaseCNN
+from models.advanced_cnn import AdvancedCNN
 from models.cnn_classification import AgeClassificationModel
 from models.cnn_regression import AgeRegressionModel
 from models.cnn_multi import AgeMultiModel
@@ -15,6 +17,7 @@ LR = 1e-3
 EPOCHS = 20
 PATIENCE = 3
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+backbone = BaseCNN()
 
 parser = argparse.ArgumentParser(description="Age estimation project")
 subparsers = parser.add_subparsers(dest="command", required=True)
@@ -34,11 +37,11 @@ args = parser.parse_args()
 
 if args.command == "train":
     if args.model == "c":
-        model = AgeClassificationModel()
+        model = AgeClassificationModel(backbone)
     elif args.model == "r":
-        model = AgeRegressionModel()
+        model = AgeRegressionModel(backbone)
     else:
-        model = AgeMultiModel()
+        model = AgeMultiModel(backbone)
 
     print("Starting training!")
     train(model, args.path, device, IMG_SIZE, BATCH_SIZE, EPOCHS, LR, PATIENCE)

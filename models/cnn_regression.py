@@ -1,10 +1,9 @@
 from torch import nn
-from .base_cnn import BaseCNN
 
 class AgeRegressionModel(nn.Module):
-    def __init__(self):
+    def __init__(self, backbone):
         super().__init__()
-        self.backbone = BaseCNN()
+        self.backbone = backbone
         self.fc_reg = nn.Linear(128, 1)
         self.type = "r"
 
